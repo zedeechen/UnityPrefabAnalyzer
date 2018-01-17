@@ -38,10 +38,14 @@ namespace PrefabAnalyzer
             for (int i = 2, lineLen = lineArr.Length; i < lineLen; i++)
             {
                 line = lineArr[i].TrimStart();
+
+                // start with a new object
                 if (line.StartsWith("--- "))
                 {
                     currentObj = null;
                 }
+
+                //init new object
                 foreach (Type t in mClassPatterns.Keys)
                 {
                     attr = mClassPatterns[t];
@@ -64,6 +68,7 @@ namespace PrefabAnalyzer
                     }
                 }
 
+                //add children ids
                 if (currentObj != null)
                 {
                     match = Regex.Match(line, @"^- component: {fileID: (.+)}$");
@@ -81,6 +86,7 @@ namespace PrefabAnalyzer
                     }
                 }
 
+                // analyze properties
                 if (currentObj != null && propArr != null)
                 {
                     for (int j = 0, fieldLen = propArr.Length; j < fieldLen; j++)
@@ -107,6 +113,7 @@ namespace PrefabAnalyzer
                 }
             }
 
+            // build tree struct with each object
             GenerateTreeStruct();
 
             Console.WriteLine("Fin");
